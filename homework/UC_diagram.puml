@@ -1,0 +1,28 @@
+@startuml SmartHangar Use Case Diagram
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Uživatel" as User
+
+rectangle SmartHangar {
+    usecase "Získání a uložení\nmeteo dat" as UC1
+    usecase "Predikce koroze" as UC2
+    usecase "Uložení dat\no korozi" as UC3
+    usecase "Upozornění\nna limit" as UC4
+    usecase "Zobrazení\nvybraných dat" as UC5
+}
+
+actor "Časovač" as Timer
+
+User -down-> UC1
+User -down-> UC5
+UC1 -left[hidden]- UC2
+UC2 -left[hidden]- UC3
+UC3 -left[hidden]- UC4
+UC4 -left[hidden]- UC5
+UC2 -left-> UC3 : <<include>>
+UC3 .left.> UC4 : <<extend>>
+UC1 <-down- Timer
+UC2 <-down- Timer
+
+@enduml
