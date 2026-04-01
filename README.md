@@ -6,8 +6,12 @@ Průběžná práce na předmětu 2371137 - Projektování informačních systé
 
 ## Semestrální práce
 
-1. [Use Case Diagram](./homework/UC_diagram.puml)
+1. Use Case Diagram
+    -[raw](./homework/UC_diagram.puml)
+    -[svg](./homework/UC_Diagram.svg)
 
 ## Prezentace
 
-1. [Action Diagram](./presentation/ActionDiagram_v1.puml)
+1. Action Diagram
+    -[raw](./presentation/ActionDiagram_v1.puml)
+    -[svg](./presentation/ActionDiagram_v1.svg)
