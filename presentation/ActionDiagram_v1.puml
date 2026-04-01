@@ -1,7 +1,7 @@
 @startuml
 |User| Uživatel
 start
-repeat
+floating note right: <<precondition>>\nSystém je online.\nUživatel není přihlášen.
 :Otevřít přihlašovací stránku;
 :Zadat jméno a heslo;
 :Odeslat formulář;
@@ -20,8 +20,8 @@ else(Ne)
     :Zobrazit chybovou zprávu;
     |User|
     if(Reset\nhesla?)then(Ne)
-     :Zkusit znovu;
-     stop
+      :Zkusit znovu;
+      stop
     else(Ano)
       :Kliknout "Zampoenuté heslo";
       |Sys|
@@ -40,18 +40,16 @@ else(Ne)
       :Změnit heslo;
       :Zkusit znovu;
       stop
-    endif 
+    endif
   else(Ano)
     |Email|
     :Timeout 15 min;
     :Odeslat upozornění\nna zablokování účtu;
-    
   endif
     |User|
     :Vyčkat timeout;
-
     :Zkusit znovu;
-  
-  stop
-
+    stop
+|Sys|    
+floating note : <<postcondition>> Uživatel použil informační systém.
 @enduml
