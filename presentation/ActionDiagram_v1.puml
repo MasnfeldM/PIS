@@ -1,0 +1,57 @@
+@startuml
+|User| Uživatel
+start
+repeat
+:Otevřít přihlašovací stránku;
+:Zadat jméno a heslo;
+:Odeslat formulář;
+|Sys| Systém
+:Ověřit přihlašovací údaje;
+if(Údaje\nplatné)then(Ano)
+  :Vytvořit relaci;
+  :Přesměrovat na dashboard;
+  |User|
+  :Použití informačního systému;
+  end
+else(Ne)
+  |Sys|
+  :Inkrementovat počet pokusů;
+  if(Pokusy >= 3)then(Ne)
+    :Zobrazit chybovou zprávu;
+    |User|
+    if(Reset\nhesla?)then(Ne)
+     :Zkusit znovu;
+     stop
+    else(Ano)
+      :Kliknout "Zampoenuté heslo";
+      |Sys|
+      :Zobrazit formuář \npro změnu hesla;
+      |User|
+      :Zadat registrovaný e-mail;
+      |Sys|
+      fork
+        :Ověřit e-mail v DB;
+      fork again
+        :Vygenerovat reset token;
+      endfork
+      |Email| E-mailový server
+      :Odeslat e-mail s odkazem na reset;
+      |User|
+      :Změnit heslo;
+      :Zkusit znovu;
+      stop
+    endif 
+  else(Ano)
+    |Email|
+    :Timeout 15 min;
+    :Odeslat upozornění\nna zablokování účtu;
+    
+  endif
+    |User|
+    :Vyčkat timeout;
+
+    :Zkusit znovu;
+  
+  stop
+
+@enduml
