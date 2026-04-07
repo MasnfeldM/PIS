@@ -1,0 +1,195 @@
+@startuml
+title SmartHangar - Class diagram
+
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+skinparam classHeaderBackgroundColor #E1F5EE
+skinparam classBorderColor #0F6E56
+skinparam arrowColor #444441
+skinparam arrowFontSize 11
+skinparam noteFontSize 11
+skinparam packageStyle rectangle
+skinparam linetype ortho
+skinparam nodesep 50
+skinparam ranksep 60
+
+
+' ── Aktéři ──────────────────────────────────────────────────────────────────
+class Casovac        as "Časovač"
+class Uzivatel       as "Uživatel"
+class Administrator  as "Administrátor"
+
+' ── Výčtové typy ─────────────────────────────────────────────────────────────
+enum StavDat {
+  VALIDNI
+  PODEZRELA
+}
+
+enum Spolehlivost {
+  VYSOKA
+  NIZKA
+}
+
+enum UrovenUpozorneni {
+  INFORMACNI
+  VAROVANI
+  KRITICKE
+}
+
+enum KanalDoruceni {
+  IN_APP
+  EMAIL
+  SMS
+}
+
+enum TypModelu {
+  EMA
+  ML
+  FYZIKALNI
+}
+
+enum TypRole {
+  UZIVATEL
+  ADMINISTRATOR
+}
+
+' ── Třídy - jádro systému ────────────────────────────────────────────────────
+
+class MeteoData {
+  +id           : UUID
+  +teplota      : float
+  +vlhkost      : float
+  +tlak         : float
+  +rosnyBod     : float
+  +rychlostVetru: float
+  +smerVetru    : float
+  +cas   : DateTime
+  +stav         : StavDat
+  --
+  +ulozitHistoricke()   : bool
+  +ulozitPredpoved()    : bool
+  +zobrazit()           : list
+}
+
+class Hangar {
+  +id           : UUID
+  +nazev        : string
+  +lokace       : string
+  +limitKoroze  : float
+  --
+  +getPosledniData() : list
+  +spustPredikciManualne() : void
+}
+
+class KorozePredikce {
+  +id                : UUID
+  +zmenaKoroze       : float
+  +sumaKoroze        : float
+  +spolehlivost      : Spolehlivost
+  +casPredikce       : DateTime
+  --
+}
+
+class Upozorneni {
+  +id           : UUID
+  +uroven       : UrovenUpozorneni
+  +kanal        : KanalDoruceni
+  +casOdeslani  : DateTime
+  +potlaceno    : bool
+  --
+  +odeslat() : bool
+  +archivovat() : void
+}
+
+class SystemovyLog {
+  +id          : UUID
+  +zprava      : string
+  +casRazitko  : DateTime
+  --
+  +zaznamenat() : void
+}
+
+' ── Třídy - role a přístup ────────────────────────────────────────────────────
+
+class UzivatelskaRole {
+  +id           : UUID
+  +jmeno        : string
+  +email        : string
+  +rolePristup  : TypRole
+  --
+  +prihlas() : bool
+  +maOpravneni(akce : string) : bool
+}
+
+class AdminRole {
+  +spravovaneHangary : list
+  --
+  +nastavitPrahy() : void
+  +nastavitTimer() : void
+  +spravujModel() : void
+  +zobrazitLog() : list
+}
+
+' ── Nové třídy z doporučení kap. 8 ──────────────────────────────────────────
+
+class KonfiguraceTimeru {
+  +id                       : UUID
+  +casUlozeniHistorickych   : int
+  +casUlozeniPredpovedi     : int
+  +casPredikce              : int
+  +aktivni                  : bool
+  --
+  +ulozit() : void
+  +validovat() : bool
+}
+
+class PredikcniModel {
+  +id       : UUID
+  +typ      : TypModelu
+  +verze    : string
+  +presnost : float
+  +aktivni  : bool
+  --
+  +spustit(data : list) : float
+  +verifikovat() : bool
+}
+
+class KonfiguraceLimitu {
+  +id               : UUID
+  +pragInformacni   : float
+  +pragVarovani     : float
+  +pragKriticke     : float
+  +ticheOkno        : int
+  --
+  +validovat() : bool
+}
+
+
+' ── Vztahy - aktéři ──────────────────────────────────────────────────────────
+Casovac        ..> MeteoData         : "spustit získání"
+Casovac        ..> PredikcniModel    : "spustit"
+Casovac        <.. KonfiguraceTimeru  
+Uzivatel       --> UzivatelskaRole   : "přihlášen jako"
+Uzivatel       ..> MeteoData         : "spustit získání\nmanuálně"
+Uzivatel       ..> Hangar            : "spouští predikci\nmanuálně"
+Administrator  --> AdminRole         : "přihlášen jako"
+Administrator  ..> KonfiguraceTimeru : "konfiguruje"
+Administrator  ..> KonfiguraceLimitu : "konfiguruje prahy"
+Administrator  ..> PredikcniModel    : "spravuje"
+
+' ── Vztahy - třídy - jádro ───────────────────────────────────────────────────
+Hangar          "1"  -->  "*"  MeteoData       
+Hangar          "1"  -->  "*"  PredikcniModel
+Hangar          "1"  -->  "*"  KorozePredikce     : "eviduje"
+Hangar          "1"  -->  "1"  KonfiguraceLimitu  : "má konfiguraci"
+PredikcniModel       -->       KorozePredikce     : "tvoří"
+KorozePredikce       ..>       Upozorneni         : "«extend»\n(index > práh)"
+KonfiguraceLimitu    -->       Upozorneni         : "řídí prahy"
+KorozePredikce       -->       SystemovyLog       : "loguje"
+Upozorneni           -->       SystemovyLog       : "loguje"
+Upozorneni           -->       Uzivatel           : "doručeno"
+MeteoData            -->       SystemovyLog       : "loguje"
+
+' ── Dědičnost ────────────────────────────────────────────────────────────────
+AdminRole --|> UzivatelskaRole : "«extends»"
+@enduml

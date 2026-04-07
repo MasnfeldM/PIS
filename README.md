@@ -10,6 +10,10 @@ Průběžná práce na předmětu 2371137 - Projektování informačních systé
     - [raw](./homework/UC_diagram.puml)
     - [svg](./homework/UC_Diagram.svg)
 
+2. Class Diagram
+    - [raw](./homework/SmartHangar_ClassDiagram_v0.puml)
+    - [svg](./homework/SH_ClassDiagram_v0.svg)
+
 ## Prezentace
 
 1. Action Diagram
