@@ -1,0 +1,169 @@
+@startuml SmartHangar_ERD
+
+
+skinparam linetype ortho
+skinparam nodesep 40
+skinparam ranksep 50
+
+entity "HANGAR" as HANGAR {
+  * id : UUID <<PK>>
+  --
+  nazev : String
+  lokace : String
+  limit_koroze : Float
+}
+
+entity "METEO_DATA" as METEO {
+  * id : UUID <<PK>>
+  --
+  * hangar_id : UUID <<FK>>
+  teplota : Float
+  vlhkost : Float
+  tlak : Float
+  rosny_bod : Float
+  cas_mereni : Timestamp
+  stav : StavDat
+}
+
+entity "PREDIKCE_KOROZE" as PREDIKCE {
+  * id : UUID <<PK>>
+  --
+  * hangar_id : UUID <<FK>>
+  * meteo_data_id : UUID <<FK>>
+  index_koroze : Float
+  predik_hodnota : Float
+  spolehlivost : Spolehlivost
+  cas_predikce : Timestamp
+  log_vstupy : String
+}
+
+entity "UPOZORNENI" as UPOZORNENI {
+  * id : UUID <<PK>>
+  --
+  * predikce_id : UUID <<FK>>
+  * hangar_id : UUID <<FK>>
+  uroven : UrovenUpozorneni
+  hodnota_indexu : Float
+  kanal : KanalDoruceni
+  stav_doruceni : StavDoruceni
+  cas_odeslani : Timestamp
+  doporucena_akce : String
+}
+
+entity "UZIVATEL" as UZIVATEL {
+  * id : UUID <<PK>>
+  --
+  jmeno : String
+  email : String
+  telefon : String
+}
+
+entity "KONFIGURACE_UPOZORNENI" as KONFIG {
+  * id : UUID <<PK>>
+  --
+  * hangar_id : UUID <<FK>>
+  * uzivatel_id : UUID <<FK>>
+  prah_info : Float
+  prah_varovani : Float
+  prah_kriticka : Float
+  kanaly : KanalDoruceni
+  tiche_okno_min : Int
+}
+
+entity "UZIVATEL_HANGAR" as UZ_HAN {
+  * uzivatel_id : UUID <<FK>>
+  * hangar_id : UUID <<FK>>
+  --
+  opravneni : TypRole
+}
+
+entity "LOG_OPERACI" as LOG {
+  * id : UUID <<PK>>
+  --
+  uc_id : UC_ID
+  akce : Akce
+  vysledek : Vysledek
+  hangar_id : UUID <<FK>>
+  cas : Timestamp
+}
+
+enum StavDat {
+  VALIDNI
+  PODEZRELA
+}
+
+enum Spolehlivost {
+  VYSOKA
+  NIZKA
+}
+
+enum UrovenUpozorneni {
+  INFORMACNI
+  VAROVANI
+  KRITICKE
+}
+
+enum KanalDoruceni {
+  IN_APP
+  EMAIL
+  SMS
+}
+
+enum TypModelu {
+  EMA
+  ML
+  FYZIKALNI
+}
+
+enum TypRole {
+  UZIVATEL
+  ADMINISTRATOR
+}
+
+enum StavDoruceni {
+  DORUCENO
+  NEDORUCENO
+  POTLACENO
+}
+
+enum UC_ID {
+  METEO_DATA
+  PREDIKCE
+  KOROZE_DATA
+  UPOZORNENI
+  ZOBRAZENI_DAT
+}
+
+enum Akce {
+  ZISKANI_METEO_DAT
+  ULOZENI_METEO_DAT
+  SPUSTENI_PREDIKCE
+  VYPOCET_INDEXU
+  ULOZENI_PREDIKCE
+  ODESLANI_UPOZORNENI
+  POTLACENI_UPOZORNENI
+}
+
+enum Vysledek {
+  USPECH
+  CHYBA
+  VAROVANI
+  OPAKOVANI
+}
+
+
+' Relationships
+HANGAR ||--o{ METEO
+HANGAR ||--o{ PREDIKCE 
+HANGAR ||--o{ UPOZORNENI 
+HANGAR ||--o{ KONFIG 
+HANGAR ||--o{ UZ_HAN 
+HANGAR ||--o{ LOG 
+
+METEO ||--o{ PREDIKCE 
+PREDIKCE ||--o{ UPOZORNENI 
+
+UZIVATEL ||--o{ KONFIG 
+UZIVATEL ||--o{ UZ_HAN 
+
+@enduml

@@ -14,6 +14,10 @@ Průběžná práce na předmětu 2371137 - Projektování informačních systé
     - [raw](./homework/SmartHangar_ClassDiagram_v0.puml)
     - [svg](./homework/SH_ClassDiagram_v0.svg)
 
+3. Entity Relation Diagram
+    - [raw](./homework/SH_ER_Diagram_v1.puml)
+    - [svg](./homework/SH_ER_Diagram_v1.svg)
+
 ## Prezentace
 
 1. Action Diagram
