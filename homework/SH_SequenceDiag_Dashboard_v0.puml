@@ -1,0 +1,28 @@
+@startuml
+actor USER
+participant Dashboard as Dash
+participant "Fetch Endpoint" as FE
+database DB
+
+USER -> Dash: Page load request
+activate Dash
+Dash ->> FE: Fetch data request
+activate FE
+FE -> DB: fetchData(limit, offset)
+activate DB
+DB --> FE: Data
+deactivate DB
+FE --> Dash: Data
+deactivate FE
+Dash --> USER: Content
+USER -> Dash: Different content request
+Dash ->> FE: Fetch data request
+activate FE
+FE -> DB: fetchData(limit, offset)
+activate DB
+DB --> FE: Different data
+deactivate DB
+FE --> Dash: Different data
+deactivate FE
+Dash --> USER: Different content \n(without dashboard refresh)
+@enduml

@@ -18,6 +18,10 @@ Průběžná práce na předmětu 2371137 - Projektování informačních systé
     - [raw](./homework/SH_ER_Diagram_v1.puml)
     - [svg](./homework/SH_ER_Diagram_v1.svg)
 
+4. Sequnece Diagram
+    - [raw](./homework/SH_SequenceDiag_Dashboard_v0.puml)
+    - [svg](./homework/SH_SequenceDiag_Dashboard_v0.svg)
+
 ## Prezentace
 
 1. Action Diagram
