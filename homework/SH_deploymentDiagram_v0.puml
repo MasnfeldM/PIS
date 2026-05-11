@@ -1,0 +1,46 @@
+@startuml
+
+node "Client Device" {
+    artifact "Web Browser"
+}
+
+node "Application Server" {
+
+    artifact "SmartHangar Web App"
+
+    artifact "Prediction Engine"
+
+    artifact "Notification Module"
+
+    artifact "Scheduler Service"
+
+    artifact "Data aquisition service"
+}
+
+node "Database Server" {
+    database "PostgreSQL"
+}
+
+node "External Meteo Provider" {
+    artifact "Weather API"
+}
+
+node "SMS / Email Gateway" {
+    artifact "Notification Gateway"
+}
+
+"Web Browser" --> "SmartHangar Web App" : HTTPS
+
+"SmartHangar Web App" --> "PostgreSQL" : SQL
+
+"Prediction Engine" --> "PostgreSQL" : SQL
+"Data aquisition service" --> "PostgreSQL" : SQL
+
+"Scheduler Service" --> "Prediction Engine"
+"Scheduler Service" --> "Data aquisition service"
+
+"Data aquisition service" --> "Weather API" : REST API\n(HTTPS/JSON)
+
+"Notification Module" --> "Notification Gateway" : SMTP/SMS API
+
+@enduml

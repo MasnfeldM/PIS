@@ -22,6 +22,18 @@ Průběžná práce na předmětu 2371137 - Projektování informačních systé
     - [raw](./homework/SH_SequenceDiag_Dashboard_v0.puml)
     - [svg](./homework/SH_SequenceDiag_Dashboard_v0.svg)
 
+5. Activity Diagram
+    - [raw](./homework/SH_activityDiagram_v0.puml)
+    - [svg](./homework/SH_activityDiagram_v0.svg)
+
+6. Component Diagram
+    - [raw](./homework/SH_componentDiagram_v0.puml)
+    - [svg](./homework/SH_componentDiagram_v0.svg)
+
+7. Deploymet Diagram
+    - [raw](./homework/SH_deploymentDiagram_v0.puml)
+    - [svg](./homework/SH_deploymentDiagram_v0.svg)
+
 ## Prezentace
 
 1. Action Diagram

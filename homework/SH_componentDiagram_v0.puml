@@ -1,0 +1,45 @@
+@startuml
+
+package "SmartHangar" {
+
+    [Web UI] as UI
+
+    [Plánovač] as Scheduler
+    [Získávání dat] as MeteoService
+    [Predikce] as PredictionService
+    [Upozornění] as NotificationService
+    [Visualizace] as VisualizationService
+    [Export] as ExportService
+    [Log] as LoggingService
+
+    database "SmartHangar DB" as DB
+
+    
+}
+
+[Externí Meteo API] as MeteoAPI
+
+UI --> VisualizationService
+UI --> ExportService
+UI --> MeteoService
+
+Scheduler --> MeteoService
+Scheduler --> PredictionService
+
+MeteoService --> MeteoAPI
+MeteoService --> DB
+MeteoService --> NotificationService
+
+PredictionService --> DB
+PredictionService --> NotificationService
+
+VisualizationService --> DB
+ExportService --> DB
+
+NotificationService --> UI
+
+MeteoService --> LoggingService
+PredictionService --> LoggingService
+NotificationService --> LoggingService
+
+@enduml

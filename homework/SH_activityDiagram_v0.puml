@@ -1,0 +1,34 @@
+@startuml
+title Získání a uložení meteo dat
+
+start
+
+:Spuštění procesu (časovač / uživatel);
+
+repeat
+    :Odeslat požadavek na meteo API;
+    
+    if (Zdroj dostupný?) then (ano)
+        :Přijmout meteodata;
+        
+        if (Data validní?) then (ano)
+            :Uložit data do DB;
+            :Zapsat úspěch do logu;
+            stop
+        else (ne)
+            :Uložit jako podezřelá data;
+            :Zapsat chybu do logu;
+            :Odeslat chybu správci;
+            stop
+        endif
+
+    else (ne)
+        :Čekat <API_timeout> s;
+    endif
+
+repeat while (Počet pokusů < 3?)
+
+:Odeslat chybu správci;
+stop
+
+@enduml
